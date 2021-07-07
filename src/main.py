@@ -24,6 +24,7 @@ logger = logging.getLogger()
 if not os.path.isfile(os.getenv('TESSERACT_PATH') if os.getenv('TESSERACT_PATH') else ''):
     error = 'OOPS - Path to Tesseract not found - Did you install it? Check the Setup Guide in the README file'
     logger.error(error)
+    input("Press Enter to continue...")
     raise Exception(error)
 
 pytesseract.pytesseract.tesseract_cmd = os.getenv('TESSERACT_PATH')
