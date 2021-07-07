@@ -1,0 +1,7 @@
+mss==6.1.0
+numpy==1.21.0
+opencv-python==4.5.2.54
+pygame==2.0.1
+pytesseract==0.3.7
+python-dotenv==0.18.0
+pywin32==301
