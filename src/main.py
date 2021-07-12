@@ -105,7 +105,7 @@ try:
         kill_ts_list = [x for x in kill_ts_list if x['time'] >= time.time() - MULTI_KILL_TIMEDELTA_SECONDS * 4]
         logger.info(f'Recent kills: {kill_ts_list}')
 
-        for line in lines:
+        for idx, line in enumerate(lines):
 
             # Check if knocked down appears in current line - or very similar
             max_distance_knocked_down = 0 # Distance value between 'knocked down' and very similar string
@@ -137,7 +137,9 @@ try:
                     # Get parsed enemy name
                     enemy_name = splitted[1].replace('|', '').strip()
                     if enemy_name == '':
-                        continue
+                        # Edge case, is enemy name on next line ? Peek next line if next line exists
+                        if idx+1 < len(lines):
+                            enemy_name = lines[idx+1].replace('|', '').strip()
 
                     # Check if known kill - already announced? via name
                     known = False
