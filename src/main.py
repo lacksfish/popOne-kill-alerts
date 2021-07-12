@@ -13,7 +13,7 @@ import pytesseract
 from pygame import mixer
 
 from lib.img import ScreenShooter
-from lib.utils import maxDiff, jaro_winkler
+from lib.utils import maxDiff, jaro_winkler, gun_names
 from lib.funcs import image_improve, image_improve_rotation, detect_text, play_audio
 
 logging.basicConfig(format='%(message)s')
@@ -140,6 +140,12 @@ try:
                         # Edge case, is enemy name on next line ? Peek next line if next line exists
                         if idx+1 < len(lines):
                             enemy_name = lines[idx+1].replace('|', '').strip()
+
+                    # Remove Gun name from enemy name
+                    for gun in gun_names:
+                        if enemy_name.endswith(gun):
+                            enemy_name = enemy_name.replace(gun, '')
+                            enemy_name = enemy_name.strip()
 
                     # Check if known kill - already announced? via name
                     known = False

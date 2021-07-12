@@ -106,3 +106,30 @@ def jaro_winkler(s1, s2):
         jaro_dist += 0.1 * prefix * (1 - jaro_dist)
 
     return jaro_dist
+
+
+gun_names = [
+    # pistols
+    '.357 Magnum',
+    '1911',
+    'Px4',
+    # SMGs
+    'P90',
+    'UMP',
+    'MP5',
+    # Shotguns
+    'M1014',
+    'DT11',
+    'Matadors',
+    # Assault Rifles
+    'AKM',
+    'MK18',
+    'CX4',
+    # Snipes
+    'S85',
+    'AWP'
+    # Others
+    'Knife',
+    'Zone Grenade',
+    'Frag Grenade'
+]
