@@ -43,6 +43,7 @@ RANDOM_AUDIO_FOLDER = os.getenv('RANDOM_AUDIO_FOLDER')
 ONE_KILL_KEYSTROKE = os.getenv('ONE_KILL_KEYSTROKE')
 TWO_KILLS_KEYSTROKE = os.getenv('TWO_KILLS_KEYSTROKE')
 THREE_KILLS_KEYSTROKE = os.getenv('THREE_KILLS_KEYSTROKE')
+KEYSTROKE_DELAY = float(os.getenv('KEYSTROKE_DELAY'))
 
 DEBUG_SAVE_DETECTED_TEXT_IMAGES = os.getenv("DEBUG_SAVE_DETECTED_TEXT_IMAGES", 'False').lower() in ('true', '1', 't')
 
@@ -75,6 +76,8 @@ try:
     kill_ts_list = []
     # kill_ts_list = [{'time': time.time(), 'name': 'BobbyBoyy'}]
     DEBUG_detected_list = []
+
+    keystroke_queue_time = None
 
     logger.info('(x) Everything looks good, initialized. Running ...\n')
 
@@ -185,12 +188,14 @@ try:
                             if THREE_KILLS_AUDIO is not None:
                                 play_audio(THREE_KILLS_AUDIO)
                             if THREE_KILLS_KEYSTROKE is not None:
-                                keyboard.press_and_release(THREE_KILLS_KEYSTROKE)
+                                keystroke_queue_time = time.time()
+                                keystroke_queue_key = THREE_KILLS_KEYSTROKE
                         elif len(kill_ts_list) > 1 and maxDiff(timestamps[-2:]) <= MULTI_KILL_TIMEDELTA_SECONDS:
                             if TWO_KILLS_AUDIO is not None:
                                 play_audio(TWO_KILLS_AUDIO)
                             if TWO_KILLS_KEYSTROKE is not None:
-                                keyboard.press_and_release(TWO_KILLS_KEYSTROKE)
+                                keystroke_queue_time = time.time()
+                                keystroke_queue_key = TWO_KILLS_KEYSTROKE
                         else:
                             if os.path.isdir(RANDOM_AUDIO_FOLDER if RANDOM_AUDIO_FOLDER is not None else ''):
                                 audio = random.choice([x for x in os.listdir(RANDOM_AUDIO_FOLDER) if os.path.isfile(os.path.join(RANDOM_AUDIO_FOLDER, x))])
@@ -199,7 +204,13 @@ try:
                                 if ONE_KILL_AUDIO is not None:
                                     play_audio(ONE_KILL_AUDIO)
                                 if ONE_KILL_KEYSTROKE is not None:
-                                    keyboard.press_and_release(ONE_KILL_KEYSTROKE)
+                                    keystroke_queue_time = time.time()
+                                    keystroke_queue_key = ONE_KILL_KEYSTROKE
+
+        if keystroke_queue_time is not None and time.time() - keystroke_queue_time >= KEYSTROKE_DELAY:
+            # Perform the queued keystroke
+            keyboard.press_and_release(keystroke_queue_key)
+            keystroke_queue_time = None
 
         end_ts = time.time()
         last_read_delay = end_ts - start_ts
