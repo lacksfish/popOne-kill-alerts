@@ -11,6 +11,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import pytesseract
 from pygame import mixer
+import keyboard
 
 from lib.img import ScreenShooter
 from lib.utils import maxDiff, jaro_winkler, gun_names
@@ -39,6 +40,9 @@ ONE_KILL_AUDIO = os.getenv('ONE_KILL_AUDIO')
 TWO_KILLS_AUDIO = os.getenv('TWO_KILLS_AUDIO')
 THREE_KILLS_AUDIO = os.getenv('THREE_KILLS_AUDIO')
 RANDOM_AUDIO_FOLDER = os.getenv('RANDOM_AUDIO_FOLDER')
+ONE_KILL_KEYSTROKE = os.getenv('ONE_KILL_KEYSTROKE')
+TWO_KILLS_KEYSTROKE = os.getenv('TWO_KILLS_KEYSTROKE')
+THREE_KILLS_KEYSTROKE = os.getenv('THREE_KILLS_KEYSTROKE')
 
 DEBUG_SAVE_DETECTED_TEXT_IMAGES = os.getenv("DEBUG_SAVE_DETECTED_TEXT_IMAGES", 'False').lower() in ('true', '1', 't')
 
@@ -180,9 +184,13 @@ try:
                         if len(kill_ts_list) > 2 and maxDiff(timestamps[-3:]) <= MULTI_KILL_TIMEDELTA_SECONDS:
                             if THREE_KILLS_AUDIO is not None:
                                 play_audio(THREE_KILLS_AUDIO)
+                            if THREE_KILLS_KEYSTROKE is not None:
+                                keyboard.press_and_release(THREE_KILLS_KEYSTROKE)
                         elif len(kill_ts_list) > 1 and maxDiff(timestamps[-2:]) <= MULTI_KILL_TIMEDELTA_SECONDS:
                             if TWO_KILLS_AUDIO is not None:
                                 play_audio(TWO_KILLS_AUDIO)
+                            if TWO_KILLS_KEYSTROKE is not None:
+                                keyboard.press_and_release(TWO_KILLS_KEYSTROKE)
                         else:
                             if os.path.isdir(RANDOM_AUDIO_FOLDER if RANDOM_AUDIO_FOLDER is not None else ''):
                                 audio = random.choice([x for x in os.listdir(RANDOM_AUDIO_FOLDER) if os.path.isfile(os.path.join(RANDOM_AUDIO_FOLDER, x))])
@@ -190,6 +198,8 @@ try:
                             else:
                                 if ONE_KILL_AUDIO is not None:
                                     play_audio(ONE_KILL_AUDIO)
+                                if ONE_KILL_KEYSTROKE is not None:
+                                    keyboard.press_and_release(ONE_KILL_KEYSTROKE)
 
         end_ts = time.time()
         last_read_delay = end_ts - start_ts
