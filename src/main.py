@@ -77,6 +77,7 @@ try:
     # kill_ts_list = [{'time': time.time(), 'name': 'BobbyBoyy'}]
     DEBUG_detected_list = []
 
+    keystroke_queue_key = None
     keystroke_queue_time = None
 
     logger.info('(x) Everything looks good, initialized. Running ...\n')
@@ -197,19 +198,23 @@ try:
                                 keystroke_queue_time = time.time()
                                 keystroke_queue_key = TWO_KILLS_KEYSTROKE
                         else:
-                            if os.path.isdir(RANDOM_AUDIO_FOLDER if RANDOM_AUDIO_FOLDER is not None else ''):
+                            if os.path.isdir(RANDOM_AUDIO_FOLDER if RANDOM_AUDIO_FOLDER is not None else False):
                                 audio = random.choice([x for x in os.listdir(RANDOM_AUDIO_FOLDER) if os.path.isfile(os.path.join(RANDOM_AUDIO_FOLDER, x))])
                                 play_audio(os.path.join(RANDOM_AUDIO_FOLDER, audio))
                             else:
                                 if ONE_KILL_AUDIO is not None:
                                     play_audio(ONE_KILL_AUDIO)
-                                if ONE_KILL_KEYSTROKE is not None:
-                                    keystroke_queue_time = time.time()
-                                    keystroke_queue_key = ONE_KILL_KEYSTROKE
+
+                            if ONE_KILL_KEYSTROKE is not None:
+                                keystroke_queue_time = time.time()
+                                keystroke_queue_key = ONE_KILL_KEYSTROKE
 
         if keystroke_queue_time is not None and time.time() - keystroke_queue_time >= KEYSTROKE_DELAY:
             # Perform the queued keystroke
-            keyboard.press_and_release(keystroke_queue_key)
+            keyboard.press(keystroke_queue_key)
+            time.sleep(0.05)
+            keyboard.release(keystroke_queue_key)
+            keystroke_queue_key = None
             keystroke_queue_time = None
 
         end_ts = time.time()
