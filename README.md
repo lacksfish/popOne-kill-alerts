@@ -1,6 +1,7 @@
 # POP:ONE Kill Alerts
 
-This tool will play user-provided sound files when a kill in Pop:One is detected.
+This tool will play user-provided sound files, or trigger keyboard hotkeys when a kill in Pop:One is detected.
+Hotkeys can then be used in other applications such as OBS Studio, to trigger replays or animations.
 
 Kills are being detected via OCR text recognition on the game window.
 
