@@ -1,11 +1,16 @@
 # POP:ONE Kill Alerts
 
-This tool will play user-provided sound files, or trigger keyboard hotkeys when a kill in Pop:One is detected.
+This tool can do a few things for you when a kill in Pop:One is detected. Kills are being detected via OCR text recognition on the game window.
+
+This tool can:
+
+* Play audio files (randomly or specific files)
+* Trigger keyboard hotkeys
+* Add Stream markers or create clips on Twitch
+
 Hotkeys can then be used in other applications such as OBS Studio, to trigger replays or animations.
 
-Kills are being detected via OCR text recognition on the game window.
-
-The game window has to be open and visible on the desktop! Make it as large as possible.
+**IMPORTANT**: The game window has to be open and visible on the desktop! Make it as large as possible.
 
 # Setup
 
@@ -17,8 +22,9 @@ The game window has to be open and visible on the desktop! Make it as large as p
 * Copy the file `.env.example` to `.env` and open it in Notepad
 * Edit `.env` and adjust the variables to your preferences
 
-Explanation of the variables in `.env`:
+## Explanation of the variables in `.env`
 
+### General settings
 | Variable                       | Description                                                                                          |
 |--------------------------------|------------------------------------------------------------------------------------------------------|
 | `INGAME_USERNAME`              | Your in-game username                                                                                |
@@ -27,15 +33,33 @@ Explanation of the variables in `.env`:
 | `TIME_INTERVAL_SECONDS`        | Time in seconds between individual screen reads. Set this to `1` or `2`                              |
 | `FORCE_WINDOW_FRONT`           | Force window to be on top before every cycle - Set to `True`/`False`                                 |
 | `MULTI_KILL_TIMEFRAME_SECONDS` | How long do kills stack? In seconds - `15` to `20` seconds seems nice                                |
+| `AUTOREFRESH_WINDOW_POSITION`  | Recalculate window position before each cycle - Set to `True`/`False`                                |
+| `DEBUG_SAVE_DETECTED_TEXT_IMAGES`| Save image, previous 2 images and detected text in a debug folder - Set to `True`/`False`          |
+
+### Audio playback options (optional)
+| Variable                       | Description                                                                                          |
+|--------------------------------|------------------------------------------------------------------------------------------------------|
 | `ONE_KILL_AUDIO`               | Path to your audio file for doing one kill                                                           |
 | `TWO_KILLS_AUDIO`              | Path to your audio file for doing two kills                                                          |
 | `THREE_KILLS_AUDIO`            | Path to your audio file for doing three kills                                                        |
 | `RANDOM_AUDIO_FOLDER`          | Optional - play a random file from this folder instead of `ONE_KILL_AUDIO`                           |
+
+### Keyboard hotkey options (optional)
+| Variable                       | Description                                                                                          |
+|--------------------------------|------------------------------------------------------------------------------------------------------|
 | `ONE_KILL_KEYSTROKE`           | Keys to press for doing one kill. Single key (`tab`), combo (`alt+f4`), or series (`ctrl+c, ctrl+v`) |
 | `TWO_KILLS_KEYSTROKE`          | Keys to press for doing two kills                                                                    |
 | `THREE_KILLS_KEYSTROKE`        | Keys to press for doing three kills                                                                  |
 | `KEYSTROKE_DELAY`              | Time in seconds to delay a keypress after a kill. Set this to `0` to press immediately               |
-| `AUTOREFRESH_WINDOW_POSITION`  | Recalculate window position before each cycle - Set to `True`/`False`                                |
+
+### Twitch options (optional)
+| Variable                       | Description                                                                                          |
+|--------------------------------|------------------------------------------------------------------------------------------------------|
+| `TWITCH_USERNAME`              | Your Twitch Username                                                                                 |
+| `TWITCH_ACCESS_TOKEN`          | Twitch access token - use https://twitchtokengenerator.com                                           |
+| `TWITCH_CLIENT_ID`             | Twitch client id - use https://twitchtokengenerator.com or register your own on https://dev.twitch.tv |
+| `ENABLE_AUTO_STREAM_MARKERS`   | Enable automatic stream markers on kills - Set to `True`/`False`                                     |
+| `ENABLE_AUTO_CREATE_CLIPS`     | Enable automatic clips creation on kills - Set to `True`/`False`                                     |
 
 # How to run
 You can simply grab the binary executable from the [releases page](https://github.com/lacksfish/popOne-kill-alerts/releases).
