@@ -42,4 +42,4 @@ class Twitcher:
         return self._make_twitch_request_post('streams/markers', {'user_id': self.user_id, 'description': f"{description}"})
 
     def create_clip(self):
-        return self._make_twitch_request_post('clips', {'broadcaster_id': self.user_id})
+        return self._make_twitch_request_post('clips', {'broadcaster_id': self.user_id, 'has_delay': True})
