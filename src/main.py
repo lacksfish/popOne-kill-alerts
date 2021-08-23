@@ -14,8 +14,9 @@ from pygame import mixer
 import keyboard
 
 from lib.img import ScreenShooter
-from lib.utils import maxDiff, jaro_winkler, gun_names
+from lib.utils import maxDiff, jaro_winkler, gun_names, to_bool
 from lib.funcs import image_improve, image_improve_rotation, detect_text, play_audio
+from lib.twitcher import Twitcher
 
 logging.basicConfig(format='%(message)s')
 logging.getLogger().setLevel(logging.INFO)
@@ -34,8 +35,8 @@ INGAME_USERNAME = os.getenv('INGAME_USERNAME')
 WINDOW_NAME = os.getenv('WINDOW_NAME')
 TIME_INTERVAL_SECONDS = os.getenv('TIME_INTERVAL_SECONDS')
 MULTI_KILL_TIMEDELTA_SECONDS = int(os.getenv('MULTI_KILL_TIMEFRAME_SECONDS'))
-FORCE_WINDOW_FRONT = os.getenv("FORCE_WINDOW_FRONT", 'False').lower() in ('true', '1', 't')
-AUTOREFRESH_WINDOW_POSITION = os.getenv("AUTOREFRESH_WINDOW_POSITION", 'False').lower() in ('true', '1', 't')
+FORCE_WINDOW_FRONT = to_bool(os.getenv("FORCE_WINDOW_FRONT", 'False'))
+AUTOREFRESH_WINDOW_POSITION = to_bool(os.getenv("AUTOREFRESH_WINDOW_POSITION", 'False'))
 ONE_KILL_AUDIO = os.getenv('ONE_KILL_AUDIO')
 TWO_KILLS_AUDIO = os.getenv('TWO_KILLS_AUDIO')
 THREE_KILLS_AUDIO = os.getenv('THREE_KILLS_AUDIO')
@@ -45,12 +46,31 @@ TWO_KILLS_KEYSTROKE = os.getenv('TWO_KILLS_KEYSTROKE')
 THREE_KILLS_KEYSTROKE = os.getenv('THREE_KILLS_KEYSTROKE')
 KEYSTROKE_DELAY = float(os.getenv('KEYSTROKE_DELAY'))
 
-DEBUG_SAVE_DETECTED_TEXT_IMAGES = os.getenv("DEBUG_SAVE_DETECTED_TEXT_IMAGES", 'False').lower() in ('true', '1', 't')
+DEBUG_SAVE_DETECTED_TEXT_IMAGES = to_bool(os.getenv("DEBUG_SAVE_DETECTED_TEXT_IMAGES"))
 
 if DEBUG_SAVE_DETECTED_TEXT_IMAGES:
     fileHandler = RotatingFileHandler('debug.log', mode='a', maxBytes=5*1024*1024, backupCount=2, encoding=None, delay=0)
     fileHandler.setFormatter(logging.Formatter('%(asctime)s || %(message)s'))
     logger.addHandler(fileHandler)
+
+ENABLE_AUTO_STREAM_MARKERS = to_bool(os.getenv('ENABLE_AUTO_STREAM_MARKERS', 'False'))
+ENABLE_AUTO_CREATE_CLIPS = to_bool(os.getenv('ENABLE_AUTO_CREATE_CLIPS', 'False'))
+if ENABLE_AUTO_STREAM_MARKERS or ENABLE_AUTO_CREATE_CLIPS:
+    tw_username = os.getenv('TWITCH_USERNAME')
+    access_token = os.getenv('TWITCH_ACCESS_TOKEN')
+    client_id = os.getenv('TWITCH_CLIENT_ID')
+    if not tw_username or not access_token or not client_id:
+        logger.warning('Your Twitch credentials are missing, not able to add stream markers or create clips')
+        ENABLE_AUTO_CREATE_CLIPS = False
+        ENABLE_AUTO_STREAM_MARKERS = False
+    else:
+        try:
+            twitch = Twitcher(tw_username, access_token, client_id)
+        except:
+            logger.warning('Could not authenticate with Twitch API, disabling [auto stream markers] and [auto create clips]')
+            ENABLE_AUTO_CREATE_CLIPS = False
+            ENABLE_AUTO_STREAM_MARKERS = False
+
 
 logger.info('(x) Booting ... Pop:ONE Kill Alerts')
 logger.info('(x) Brought to you by DatByte !\n')
@@ -59,7 +79,9 @@ logger.info(f"!NOTICE - Detecting username: {INGAME_USERNAME}")
 logger.info(f"!NOTICE - Waiting {TIME_INTERVAL_SECONDS} seconds between reads")
 logger.info(f"!NOTICE - Multikill timedelta is {MULTI_KILL_TIMEDELTA_SECONDS} seconds")
 logger.info(f"!NOTICE - Force window to front {'enabled' if FORCE_WINDOW_FRONT else 'disabled'}")
-logger.info(f"!NOTICE - Autorefresh window position {'enabled' if AUTOREFRESH_WINDOW_POSITION else 'disabled'}\n")
+logger.info(f"!NOTICE - Autorefresh window position {'enabled' if AUTOREFRESH_WINDOW_POSITION else 'disabled'}")
+logger.info(f"!NOTICE - Auto stream markers {'enabled' if ENABLE_AUTO_STREAM_MARKERS else 'disabled'}")
+logger.info(f"!NOTICE - Auto create clips {'enabled' if ENABLE_AUTO_CREATE_CLIPS else 'disabled'}\n")
 if DEBUG_SAVE_DETECTED_TEXT_IMAGES:
     os.makedirs("DEBUG_images", exist_ok=True)
     logger.info("! DEBUGGING MODE ! Saving detections to img files enabled\n")
@@ -208,6 +230,12 @@ try:
                             if ONE_KILL_KEYSTROKE is not None:
                                 keystroke_queue_time = time.time()
                                 keystroke_queue_key = ONE_KILL_KEYSTROKE
+
+                        if ENABLE_AUTO_STREAM_MARKERS:
+                            twitch.set_stream_marker(f"{INGAME_USERNAME} knocked down {enemy_name}")
+
+                        if ENABLE_AUTO_CREATE_CLIPS:
+                            twitch.create_clip()
 
         if keystroke_queue_time is not None and time.time() - keystroke_queue_time >= KEYSTROKE_DELAY:
             # Perform the queued keystroke
