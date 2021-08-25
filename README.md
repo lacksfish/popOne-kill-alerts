@@ -56,8 +56,8 @@ Hotkeys can then be used in other applications such as OBS Studio, to trigger re
 | Variable                       | Description                                                                                          |
 |--------------------------------|------------------------------------------------------------------------------------------------------|
 | `TWITCH_USERNAME`              | Your Twitch Username                                                                                 |
-| `TWITCH_ACCESS_TOKEN`          | Twitch access token - use https://twitchtokengenerator.com                                           |
-| `TWITCH_CLIENT_ID`             | Twitch client id - use https://twitchtokengenerator.com or register your own on https://dev.twitch.tv |
+| `TWITCH_CLIENT_SECRET`         | Twitch client secret - register on https://dev.twitch.tv/console/apps                                 |
+| `TWITCH_CLIENT_ID`             | Twitch client id - same thing, register on https://dev.twitch.tv/console/apps                        |
 | `ENABLE_AUTO_STREAM_MARKERS`   | Enable automatic stream markers on kills - Set to `True`/`False`                                     |
 | `ENABLE_AUTO_CREATE_CLIPS`     | Enable automatic clips creation on kills - Set to `True`/`False`                                     |
 

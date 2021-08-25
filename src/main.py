@@ -55,18 +55,21 @@ if DEBUG_SAVE_DETECTED_TEXT_IMAGES:
 
 ENABLE_AUTO_STREAM_MARKERS = to_bool(os.getenv('ENABLE_AUTO_STREAM_MARKERS', 'False'))
 ENABLE_AUTO_CREATE_CLIPS = to_bool(os.getenv('ENABLE_AUTO_CREATE_CLIPS', 'False'))
+
+print(ENABLE_AUTO_CREATE_CLIPS, ENABLE_AUTO_STREAM_MARKERS)
 if ENABLE_AUTO_STREAM_MARKERS or ENABLE_AUTO_CREATE_CLIPS:
     tw_username = os.getenv('TWITCH_USERNAME')
-    access_token = os.getenv('TWITCH_ACCESS_TOKEN')
+    client_secret = os.getenv('TWITCH_CLIENT_SECRET')
     client_id = os.getenv('TWITCH_CLIENT_ID')
-    if not tw_username or not access_token or not client_id:
+    if not tw_username or not client_secret or not client_id:
         logger.warning('Your Twitch credentials are missing, not able to add stream markers or create clips')
         ENABLE_AUTO_CREATE_CLIPS = False
         ENABLE_AUTO_STREAM_MARKERS = False
     else:
         try:
-            twitch = Twitcher(tw_username, access_token, client_id)
-        except:
+            twitch = Twitcher(tw_username, client_secret, client_id)
+        except Exception as e:
+            logger.error(e)
             logger.warning('Could not authenticate with Twitch API, disabling [auto stream markers] and [auto create clips]')
             ENABLE_AUTO_CREATE_CLIPS = False
             ENABLE_AUTO_STREAM_MARKERS = False
