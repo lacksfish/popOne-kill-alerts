@@ -57,9 +57,19 @@ Hotkeys can then be used in other applications such as OBS Studio, to trigger re
 |--------------------------------|------------------------------------------------------------------------------------------------------|
 | `TWITCH_USERNAME`              | Your Twitch Username                                                                                 |
 | `TWITCH_ACCESS_TOKEN`          | Twitch access token - use https://twitchtokengenerator.com                                           |
-| `TWITCH_CLIENT_ID`             | Twitch client id - use https://twitchtokengenerator.com or register your own on https://dev.twitch.tv |
+| `TWITCH_CLIENT_ID`             | Twitch client id - use https://twitchtokengenerator.com                                              |
 | `ENABLE_AUTO_STREAM_MARKERS`   | Enable automatic stream markers on kills - Set to `True`/`False`                                     |
 | `ENABLE_AUTO_CREATE_CLIPS`     | Enable automatic clips creation on kills - Set to `True`/`False`                                     |
+
+### ! Important if using Twitch options !
+**DO NOT USE YOUR OWN CLIENT ID AND CLIENT SECRET!**
+
+Because if you do, your access token will only be valid for 4 hours (because of the `channel:manage:broadcast` scope)
+
+If you use `twitchtokengenerator.com`, your token will be valid for about 2 months!
+On the token generator webpage, you need to allow the scopes 'clips:edit' and 'channel:manage:broadcast' for the Twitch Helix API
+
+After two months you will need to generate a new token most likely.
 
 # How to run
 You can simply grab the binary executable from the [releases page](https://github.com/lacksfish/popOne-kill-alerts/releases).
