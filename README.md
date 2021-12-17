@@ -30,7 +30,7 @@ Hotkeys can then be used in other applications such as OBS Studio, to trigger re
 | `INGAME_USERNAME`              | Your in-game username                                                                                |
 | `WINDOW_NAME`                  | Name of game window. The window has to be in the front and un-minimized. Usually `Population: ONE`   |
 | `TESSERACT_PATH`               | Path to your install of tesseract, probably `C:\Program Files\Tesseract-OCR\tesseract.exe`           |
-| `TIME_INTERVAL_SECONDS`        | Time in seconds between individual screen reads. Set this to `1` or `2`                              |
+| `TIME_INTERVAL_SECONDS`        | Time in seconds between individual screen reads. Set this to `1.5` or `2`                              |
 | `FORCE_WINDOW_FRONT`           | Force window to be on top before every cycle - Set to `True`/`False`                                 |
 | `MULTI_KILL_TIMEFRAME_SECONDS` | How long do kills stack? In seconds - `15` to `20` seconds seems nice                                |
 | `AUTOREFRESH_WINDOW_POSITION`  | Recalculate window position before each cycle - Set to `True`/`False`                                |
