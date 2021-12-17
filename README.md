@@ -71,6 +71,10 @@ On the token generator webpage, you need to allow the scopes 'clips:edit' and 'c
 
 After two months you will need to generate a new token most likely.
 
+### Optional Tips & Tricks
+
+For triggering instant replays automatically, I recommend [following this tutorial](https://garlic-armadillo-pjks.squarespace.com/articles/2019/10/4/b6zieupip1h45bgewyvp6gamwube7g)
+
 # How to run
 You can simply grab the binary executable from the [releases page](https://github.com/lacksfish/popOne-kill-alerts/releases).
 
