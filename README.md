@@ -1,3 +1,8 @@
+# Currently defunct
+
+Since a recent update, this tool does not work anymore. The PC window view of the game has been "zoomed" out, and the current approach can not reliably detect the text anymore. If you are interested in this tool being updated, please open an issue here on GitHub and we can discuss. :)
+
+
 # POP:ONE Kill Alerts
 
 This tool can do a few things for you when a kill in Pop:One is detected. Kills are being detected via OCR text recognition on the game window.
